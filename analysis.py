@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 df = pd.read_csv("data/exoplanets.csv")
 ## examining data
 
@@ -35,6 +36,39 @@ ranked_df = candidates_df.sort_values(
     "earth_similarity_score",
     ascending=True
 )
-print(ranked_df[["pl_name", "earth_similarity_score"]].head(10))
+# print(ranked_df[["pl_name", "earth_similarity_score"]].head(10))
 
-ranked_df.to_csv("data/ranked_exoplanets.csv", index=True)
+ranked_df.to_csv("data/ranked_exoplanets.csv", index=False)
+
+# numpy section
+
+energy_df = clean_df.dropna(subset=["st_lum", "pl_orbsmax"]).copy()
+energy_df = energy_df[energy_df["pl_orbsmax"] > 0].copy()
+energy_df = energy_df[energy_df["pl_insol"] > 0].copy()
+# print("planets available for energy calculations: ", len(energy_df))
+energy_df["calculated_insol"] = (
+    np.power(10, energy_df["st_lum"]) /
+    np.square(energy_df["pl_orbsmax"])
+)
+# print(energy_df[["pl_name", "pl_insol", "calculated_insol"]].head(10))
+
+energy_df["percent_difference"] = (
+    np.abs(energy_df["calculated_insol"] - energy_df["pl_insol"])
+    /
+    energy_df["pl_insol"]
+) * 100
+average_difference = np.mean(energy_df["percent_difference"])
+# print("average percent difference:", average_difference)
+largest_differences = energy_df.sort_values(
+    "percent_difference",
+    ascending=False
+)
+# print(
+#     largest_differences [
+#         ["pl_name", "pl_insol", "calculated_insol", "percent_difference"]
+#     ].head(5)
+# )
+
+median_difference = np.median(energy_df["percent_difference"])
+print("average difference:", average_difference)
+print("median difference:", median_difference)
