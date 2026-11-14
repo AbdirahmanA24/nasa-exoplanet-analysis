@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 df = pd.read_csv("data/exoplanets.csv")
 ## examining data
 
@@ -70,5 +71,47 @@ largest_differences = energy_df.sort_values(
 # )
 
 median_difference = np.median(energy_df["percent_difference"])
-print("average difference:", average_difference)
-print("median difference:", median_difference)
+# print("average difference:", average_difference)
+# print("median difference:", median_difference)
+
+# matplotlib section
+plt.scatter(
+    candidates_df["pl_insol"],
+    candidates_df["pl_rade"],
+    alpha=0.6,
+    color="steelblue",
+    label="Exoplanets"
+)
+plt.scatter(1,1, color="blue", s=100, label="Earth")
+plt.xlabel("Insolation (Earth = 1)")
+plt.ylabel("Planet Radius (Earth = 1)")
+plt.title("Potentially Earth-Like Exoplanets")
+
+plt.grid(True, alpha=0.3)
+plt.legend(loc="upper right", bbox_to_anchor=(0,0))
+plt.savefig("figures/exoplanet_scatter.png", dpi=300, bbox_inches="tight")
+# plt.show()
+
+# second chart
+top10 = ranked_df.head(10)
+plt.figure(figsize=(10, 6))
+
+plt.barh(
+    top10["pl_name"],
+    top10["earth_similarity_score"],
+    color="steelblue"
+)
+
+plt.xlabel("Earth Similarity Score (Lower = Better)")
+plt.ylabel("Exoplanet")
+plt.title("Top 10 Most Earth-Like Exoplanets")
+
+plt.gca().invert_yaxis()
+
+plt.tight_layout()
+plt.savefig(
+    "figures/top10_exoplanets.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+plt.show()
