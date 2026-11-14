@@ -74,44 +74,142 @@ median_difference = np.median(energy_df["percent_difference"])
 # print("average difference:", average_difference)
 # print("median difference:", median_difference)
 
-# matplotlib section
-plt.scatter(
+
+# MATPLOTLIB VISUALIZATIONS
+
+import matplotlib.pyplot as plt
+
+# Color palette
+BG = "#0B0F19"
+PANEL = "#151B2B"
+BLUE = "#54699E"
+LIGHT = "#C3CEEB"
+GRID = "#334155"
+
+# Global chart styling
+plt.rcParams.update({
+    "figure.facecolor": BG,
+    "axes.facecolor": PANEL,
+    "axes.edgecolor": GRID,
+    "axes.labelcolor": LIGHT,
+    "text.color": LIGHT,
+    "xtick.color": LIGHT,
+    "ytick.color": LIGHT,
+    "font.family": "DejaVu Sans",
+    "font.size": 11,
+    "axes.titlesize": 16,
+    "axes.titleweight": "bold",
+    "grid.color": GRID,
+    "grid.alpha": 0.4,
+    "savefig.facecolor": BG
+})
+
+
+# 1. EXOPLANET SCATTER PLOT
+
+fig, ax = plt.subplots(figsize=(11, 7))
+
+ax.scatter(
     candidates_df["pl_insol"],
     candidates_df["pl_rade"],
-    alpha=0.6,
-    color="steelblue",
-    label="Exoplanets"
-)
-plt.scatter(1,1, color="blue", s=100, label="Earth")
-plt.xlabel("Insolation (Earth = 1)")
-plt.ylabel("Planet Radius (Earth = 1)")
-plt.title("Potentially Earth-Like Exoplanets")
-
-plt.grid(True, alpha=0.3)
-plt.legend(loc="upper right", bbox_to_anchor=(0,0))
-plt.savefig("figures/exoplanet_scatter.png", dpi=300, bbox_inches="tight")
-# plt.show()
-
-# second chart
-top10 = ranked_df.head(10)
-plt.figure(figsize=(10, 6))
-
-plt.barh(
-    top10["pl_name"],
-    top10["earth_similarity_score"],
-    color="steelblue"
+    color=BLUE,
+    alpha=0.75,
+    s=65,
+    edgecolors=LIGHT,
+    linewidths=0.4,
+    label="Exoplanet Candidates"
 )
 
-plt.xlabel("Earth Similarity Score (Lower = Better)")
-plt.ylabel("Exoplanet")
-plt.title("Top 10 Most Earth-Like Exoplanets")
+# Highlight Earth
+ax.scatter(
+    1, 1,
+    color=LIGHT,
+    s=180,
+    marker="*",
+    label="Earth",
+    zorder=5
+)
 
-plt.gca().invert_yaxis()
+ax.set_title("EXOPLANET DISCOVERY", pad=25)
+ax.set_xlabel("Stellar Insolation (Earth = 1)", labelpad=12)
+ax.set_ylabel("Planetary Radius (Earth = 1)", labelpad=12)
+
+ax.grid(True, linestyle="--", alpha=0.25)
+ax.set_axisbelow(True)
+
+ax.legend(
+    facecolor=PANEL,
+    edgecolor=GRID,
+    labelcolor=LIGHT,
+    loc="upper right"
+)
+
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
 
 plt.tight_layout()
+
+plt.savefig(
+    "figures/exoplanet_scatter.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+
+plt.show()
+
+# 2. TOP 10 EXOPLANET RANKINGS
+
+top10 = ranked_df.head(10)
+
+fig, ax = plt.subplots(figsize=(11, 7))
+
+bars = ax.barh(
+    top10["pl_name"],
+    top10["earth_similarity_score"],
+    color=BLUE,
+    height=0.65,
+    alpha=0.9
+)
+
+# Highlight the best-ranked candidate
+bars[0].set_color(LIGHT)
+
+ax.invert_yaxis()
+
+ax.set_title("TOP 10 EARTH-LIKE EXOPLANETS", pad=25)
+ax.set_xlabel("Earth Similarity Score (Lower = Better)", labelpad=12)
+
+# Display scores beside bars
+for bar in bars:
+    width = bar.get_width()
+
+    ax.text(
+        width + 0.01,
+        bar.get_y() + bar.get_height() / 2,
+        f"{width:.3f}",
+        va="center",
+        color=LIGHT,
+        fontsize=10
+    )
+
+ax.set_xlim(
+    0,
+    top10["earth_similarity_score"].max() * 1.2
+)
+
+ax.grid(axis="x", linestyle="--", alpha=0.25)
+ax.set_axisbelow(True)
+
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+ax.spines["left"].set_visible(False)
+
+plt.tight_layout()
+
 plt.savefig(
     "figures/top10_exoplanets.png",
     dpi=300,
     bbox_inches="tight"
 )
+
 plt.show()
