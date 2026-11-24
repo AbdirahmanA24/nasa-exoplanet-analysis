@@ -820,6 +820,7 @@ st.divider()
 st.html("""
 <div class="footer">
     <p>Exoplanet Explorer · V1.0</p>
+    <p>Developed by Abdirahman Ahmed</p>
     <p>Data provided by the NASA Exoplanet Archive</p>
 </div>
 """)
