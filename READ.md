@@ -16,3 +16,4 @@ used Matplotlib to create a plot of potential earth-like exoplanets and a Top 10
 
 ## Phase 4 -- User Interface
 
+Used Streamlit for interface and plotly for interactive graphs
