@@ -1,3 +1,2 @@
-# tells git which files and folders to not track
 .venv/
 __pycache__/

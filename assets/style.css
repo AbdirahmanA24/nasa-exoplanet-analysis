@@ -1,0 +1,67 @@
+/* Global background */
+
+.stApp {
+    background: radial-gradient(
+        ellipse at bottom,
+        #172238 0%,
+        #0B0F19 50%,
+        #05070D 100%
+    );
+}
+
+/* Animated starfield */
+
+.stApp::before,
+.stApp::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+}
+
+.stApp::before {
+    background-image:
+        radial-gradient(1px 1px at 25px 40px, #ffffff 99%, transparent),
+        radial-gradient(1px 1px at 120px 160px, #C3CEEB 99%, transparent),
+        radial-gradient(2px 2px at 200px 80px, #54699E 99%, transparent);
+
+    background-size: 250px 250px;
+    opacity: 0.4;
+    animation: starDrift 100s linear infinite;
+}
+
+.stApp::after {
+    background-image:
+        radial-gradient(1px 1px at 80px 120px, #ffffff 99%, transparent),
+        radial-gradient(1px 1px at 270px 240px, #C3CEEB 99%, transparent);
+
+    background-size: 350px 350px;
+    animation: twinkle 6s ease-in-out infinite alternate;
+}
+
+/* Motion animations */
+
+@keyframes starDrift {
+    from { background-position: 0 0; }
+    to { background-position: 0 -250px; }
+}
+
+@keyframes twinkle {
+    from { opacity: 0.15; }
+    to { opacity: 0.6; }
+}
+
+/* Transparent navigation header */
+
+[data-testid="stHeader"] {
+    background: transparent;
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+    .stApp::before,
+    .stApp::after {
+        animation: none;
+    }
+}
