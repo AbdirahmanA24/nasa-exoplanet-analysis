@@ -18,4 +18,6 @@ used Matplotlib to create a plot of potential earth-like exoplanets and a Top 10
 
 Used Streamlit for interface and plotly for interactive graphs
 
-###Link: https://exploringexoplanets.streamlit.app/
+### Link: 
+
+https://exploringexoplanets.streamlit.app/
